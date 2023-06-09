@@ -1,4 +1,10 @@
 import { NgModule } from '@angular/core';
+
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import { JwtInterceptor, ErrorInterceptor } from './_helpers';
+
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -12,18 +18,26 @@ import { IconService } from './demo/service/icon.service';
 import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
 
+// used to create fake backend
+import { fakeBackendProvider } from './_helpers';
+
 @NgModule({
     declarations: [
         AppComponent, NotfoundComponent
     ],
     imports: [
+        BrowserModule,
+        ReactiveFormsModule,
+        HttpClientModule,
         AppRoutingModule,
         AppLayoutModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         CountryService, CustomerService, EventService, IconService, NodeService,
-        PhotoService, ProductService
+        PhotoService, ProductService, fakeBackendProvider
     ],
     bootstrap: [AppComponent]
 })
