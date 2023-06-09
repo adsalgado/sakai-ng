@@ -2,10 +2,11 @@
 
 export class Account {
     id?: string;
-    title?: string;
+    userName?: string;
     firstName?: string;
     lastName?: string;
     email?: string;
     role?: Role;
-    jwtToken?: string;
+    id_token?: string;
+    authorities?: string[];
 }

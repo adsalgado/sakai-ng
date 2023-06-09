@@ -18,9 +18,6 @@ import { IconService } from './demo/service/icon.service';
 import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
 
-// used to create fake backend
-import { fakeBackendProvider } from './_helpers';
-
 @NgModule({
     declarations: [
         AppComponent, NotfoundComponent
@@ -37,7 +34,7 @@ import { fakeBackendProvider } from './_helpers';
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         CountryService, CustomerService, EventService, IconService, NodeService,
-        PhotoService, ProductService, fakeBackendProvider
+        PhotoService, ProductService
     ],
     bootstrap: [AppComponent]
 })
