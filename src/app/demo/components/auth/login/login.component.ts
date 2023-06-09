@@ -37,7 +37,7 @@ export class LoginComponent {
     ) {
         // redirect to home if already logged in
         if (this.accountService.userValue) {
-            this.router.navigate(['/app/dashboard']);
+            this.router.navigate(['/app/index']);
         }
     }
 
@@ -68,7 +68,10 @@ export class LoginComponent {
             .subscribe({
                 next: () => {
                     // get return url from query parameters or default to home page
-                    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+                    var returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+                    if (returnUrl === '/' ) {
+                        returnUrl = "/app/index";
+                    }
                     this.router.navigateByUrl(returnUrl);
                 },
                 error: error => {

@@ -11,18 +11,40 @@ import { AuthGuard } from './_helpers/auth.guard';
                 path: 'app', component: AppLayoutComponent,
                 children: [
                     { 
-                        path: '', 
-                        loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule)
+                        path: 'index', 
+                        loadChildren: () => import('./pages/index/index.module').then(m => m.IndexModule),
+                        canActivate: [AuthGuard]
+                    },
+                    { 
+                        path: 'dashboard', 
+                        loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule),
+                        canActivate: [AuthGuard]
                     },
                     { 
                         path: 'uikit', 
                         loadChildren: () => import('./demo/components/uikit/uikit.module').then(m => m.UIkitModule),
                         canActivate: [AuthGuard]
                     },
-                    { path: 'utilities', loadChildren: () => import('./demo/components/utilities/utilities.module').then(m => m.UtilitiesModule) },
-                    { path: 'documentation', loadChildren: () => import('./demo/components/documentation/documentation.module').then(m => m.DocumentationModule) },
-                    { path: 'blocks', loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then(m => m.PrimeBlocksModule) },
-                    { path: 'pages', loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) }
+                    { 
+                        path: 'utilities', 
+                        loadChildren: () => import('./demo/components/utilities/utilities.module').then(m => m.UtilitiesModule),
+                        canActivate: [AuthGuard]
+                    },
+                    { 
+                        path: 'documentation', 
+                        loadChildren: () => import('./demo/components/documentation/documentation.module').then(m => m.DocumentationModule),
+                        canActivate: [AuthGuard]
+                    },
+                    { 
+                        path: 'blocks', 
+                        loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then(m => m.PrimeBlocksModule),
+                        canActivate: [AuthGuard]
+                    },
+                    { 
+                        path: 'pages', 
+                        loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule),
+                        canActivate: [AuthGuard] 
+                    }
                 ]
             },
             { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },

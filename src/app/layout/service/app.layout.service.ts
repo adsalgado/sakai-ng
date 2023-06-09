@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AccountService } from '@app/_services/account.service';
 import { Subject } from 'rxjs';
 
 export interface AppConfig {
@@ -50,6 +51,10 @@ export class LayoutService {
 
     overlayOpen$ = this.overlayOpen.asObservable();
 
+    constructor(private accountService: AccountService) {
+
+    }
+
     onMenuToggle() {
         if (this.isOverlay()) {
             this.state.overlayMenuActive = !this.state.overlayMenuActive;
@@ -95,6 +100,10 @@ export class LayoutService {
 
     onConfigUpdate() {
         this.configUpdate.next(this.config);
+    }
+
+    logout() {
+        this.accountService.logout();
     }
 
 }
