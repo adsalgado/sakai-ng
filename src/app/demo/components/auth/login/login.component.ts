@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AccountService } from '@app/_services';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import { first } from 'rxjs/operators';
 
 @Component({
     selector: 'app-login',
@@ -19,5 +23,59 @@ export class LoginComponent {
 
     password!: string;
 
-    constructor(public layoutService: LayoutService) { }
+    form!: FormGroup;
+    loading = false;
+    submitted = false;
+    error?: string;
+
+    constructor(
+        private formBuilder: FormBuilder,
+        private route: ActivatedRoute,
+        private router: Router,
+        private accountService: AccountService,
+        public layoutService: LayoutService
+    ) {
+        // redirect to home if already logged in
+        if (this.accountService.userValue) {
+            this.router.navigate(['/app/dashboard']);
+        }
+    }
+
+    ngOnInit() {
+        this.form = this.formBuilder.group({
+            username: ['', Validators.required],
+            password: ['', Validators.required]
+        });
+    }
+
+    // convenience getter for easy access to form fields
+    get f() { return this.form.controls; }
+
+    onSubmit() {
+        this.submitted = true;
+
+        // reset alert on submit
+        this.error = '';
+
+        // stop here if form is invalid
+        if (this.form.invalid) {
+            return;
+        }
+
+        this.loading = true;
+        this.accountService.login(this.f.username.value, this.f.password.value)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    // get return url from query parameters or default to home page
+                    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+                    this.router.navigateByUrl(returnUrl);
+                },
+                error: error => {
+                    this.error = error;
+                    this.loading = false;
+                }
+            });
+    }
+
 }

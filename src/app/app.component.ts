@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
+import { User } from './_models/user';
+import { AccountService } from './_services/account.service';
 
 @Component({
     selector: 'app-root',
@@ -7,9 +9,20 @@ import { PrimeNGConfig } from 'primeng/api';
 })
 export class AppComponent implements OnInit {
 
-    constructor(private primengConfig: PrimeNGConfig) { }
+    user?: User | null;
+
+    constructor(
+        private primengConfig: PrimeNGConfig,
+        private accountService: AccountService)  { 
+            this.accountService.user.subscribe(x => this.user = x);
+    }
 
     ngOnInit() {
         this.primengConfig.ripple = true;
     }
+
+    logout() {
+        this.accountService.logout();
+    }
+    
 }
