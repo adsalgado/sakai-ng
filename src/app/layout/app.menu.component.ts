@@ -21,6 +21,12 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
+                label: 'Catalogos',
+                items: [
+                    { label: 'Tipo Catálogo', icon: 'pi pi-fw pi-id-card', routerLink: ['/app/catalogs/tipo-catalogo'] },
+                ]
+            },
+            {
                 label: 'UI Components',
                 items: [
                     { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/app/uikit/formlayout'] },

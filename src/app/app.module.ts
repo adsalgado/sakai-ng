@@ -17,6 +17,7 @@ import { EventService } from './demo/service/event.service';
 import { IconService } from './demo/service/icon.service';
 import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
     declarations: [
@@ -27,7 +28,8 @@ import { PhotoService } from './demo/service/photo.service';
         ReactiveFormsModule,
         HttpClientModule,
         AppRoutingModule,
-        AppLayoutModule
+        AppLayoutModule,
+        SharedModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
