@@ -18,6 +18,8 @@ import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
 import { MessagesModule } from 'primeng/messages';
 import { CatalogoComponent } from './catalogo/catalogo.component';
+import { TipoEstatusComponent } from './tipo-estatus/tipo-estatus.component';
+import { EstatusComponent } from './estatus/estatus.component';
 
 @NgModule({
     imports: [
@@ -38,6 +40,6 @@ import { CatalogoComponent } from './catalogo/catalogo.component';
         InputNumberModule,
         DialogModule
     ],
-    declarations: [TipoCatalogoComponent, CatalogoComponent]
+    declarations: [TipoCatalogoComponent, CatalogoComponent, TipoEstatusComponent, EstatusComponent]
 })
 export class CatalogsModule { }

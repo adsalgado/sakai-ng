@@ -1,0 +1,139 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                        <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedRegistros()" [disabled]="!selectedRegistros || !selectedRegistros.length"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
+                    <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help" (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="registros" [columns]="cols" responsiveLayout="scroll" [rows]="10" 
+                    [globalFilterFields]="['id','nombre','descripcion','tipoEstatus.nombre']" 
+                    [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" 
+                    currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords}" 
+                    [(selection)]="selectedRegistros" selectionMode="multiple" [rowHover]="true" 
+                    dataKey="id" styleClass="p-datatable-sm">
+
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Estatus</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon></th>
+                        <th pSortableColumn="clave">Clave <p-sortIcon field="clave"></p-sortIcon></th>
+                        <th pSortableColumn="nombre">Nombre <p-sortIcon field="nombre"></p-sortIcon></th>
+                        <th pSortableColumn="descripcion">Descripción <p-sortIcon field="descripcion"></p-sortIcon></th>
+                        <th pSortableColumn="tipoEstatus.nombre">Tipo <p-sortIcon field="tipo"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-registro>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="registro"></p-tableCheckbox>
+                        </td>
+                        <td style="width:10%; min-width:10rem;">
+                            <span class="p-column-title">Id</span>
+                            {{registro.id}}
+                        </td>
+                        <td style="width:25%; min-width:10rem;">
+                            <span class="p-column-title">Clave</span>
+                            {{registro.clave}}
+                        </td>
+                        <td style="width:25%; min-width:10rem;">
+                            <span class="p-column-title">Nombre</span>
+                            {{registro.nombre}}
+                        </td>
+                        <td style="width:30%; min-width:10rem;">
+                            <span class="p-column-title">Descripción</span>
+                            {{registro.descripcion}}
+                        </td>
+                        <td style="width:25%; min-width:10rem;">
+                            <span class="p-column-title">Tipo</span>
+                            {{registro.tipoEstatus?.nombre}}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editRegistro(registro)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteRegistro(registro)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+        
+            </p-table> 
+            
+            <p-dialog [(visible)]="registroDialog" [style]="{width: '450px'}" header="Detalle" [modal]="true" class="p-fluid">
+                <ng-template pTemplate="content">
+                    <div class="field">
+                        <label for="clave">Clave</label>
+                        <input type="text" pInputText id="clave" [(ngModel)]="registro.clave" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !registro.clave}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !registro.clave">Clave is required.</small>
+                    </div>
+                    <div class="field">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" pInputText id="nombre" [(ngModel)]="registro.nombre" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !registro.nombre}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !registro.nombre">Nombre is required.</small>
+                    </div>
+                    <div class="field">
+                        <label for="descripcion">Descripción</label>
+                        <textarea id="descripcion" pInputTextarea [(ngModel)]="registro.descripcion" required rows="3" cols="20"></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="tipoEstatus">Tipo Catálogo</label>
+                        <p-dropdown appendTo="body" [options]="tipos" [(ngModel)]="registro.tipoEstatus" optionLabel="nombre" placeholder="Select"></p-dropdown>
+                    </div>
+                </ng-template>
+    
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                    <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveRegistro()"></button>
+                </ng-template>
+            </p-dialog>
+    
+            <p-dialog [(visible)]="deleteRegistroDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+                <div class="flex align-items-center justify-content-center">
+                    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                    <span *ngIf="registro">Are you sure you want to delete <b>{{registro.nombre}}</b>?</span>
+                </div>
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteRegistroDialog = false"></button>
+                    <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+                </ng-template>
+            </p-dialog>
+    
+            <p-dialog [(visible)]="deleteRegistrosDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+                <div class="flex align-items-center justify-content-center">
+                    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                    <span>Are you sure you want to delete selected registros?</span>
+                </div>
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteRegistrosDialog = false"></button>
+                    <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDeleteSelected()"></button>
+                </ng-template>
+            </p-dialog>
+
+        </div>
+    </div>
+</div>

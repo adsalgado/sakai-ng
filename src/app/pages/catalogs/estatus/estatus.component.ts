@@ -1,45 +1,51 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { TipoCatalogoService } from './../../../services/tipo-catalogo.service';
 import { Component, OnInit } from '@angular/core';
-import { ITipoCatalogo } from '@app/models';
+import { IEstatus, ITipoEstatus } from '@app/models';
+import { EstatusService } from '@app/services/estatus.service';
+import { TipoEstatusService } from '@app/services/tipo-estatus.service';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-tipo-catalogo',
-  templateUrl: './tipo-catalogo.component.html',
-  styleUrls: ['./tipo-catalogo.component.scss'],
+  selector: 'app-estatus',
+  templateUrl: './estatus.component.html',
+  styleUrls: ['./estatus.component.scss'],
   providers: [MessageService]
-  
 })
-export class TipoCatalogoComponent implements OnInit {
+export class EstatusComponent implements OnInit {
 
-  registros$ !: Observable<ITipoCatalogo[]>;
+  registros$ !: Observable<IEstatus[]>;
+  registros: IEstatus[] = [];
   registroDialog: boolean = false;
   deleteRegistroDialog: boolean = false;
   deleteRegistrosDialog: boolean = false;
-  registros: ITipoCatalogo[] = [];
-  selectedRegistros: ITipoCatalogo[] = [];
+  selectedRegistros: IEstatus[] = [];
   cols: any[] = [];
-  registro: ITipoCatalogo = {};
+  registro: IEstatus = {};
   submitted: boolean = false;
 
-  constructor(public tipoCatalogoService: TipoCatalogoService, private messageService: MessageService) {
+  tipos$ !: Observable<ITipoEstatus[]>;
+  tipos: ITipoEstatus[] = [];
+
+  constructor(public estatusService: EstatusService, public tipoEstatusService: TipoEstatusService,
+    private messageService: MessageService) {
 
   }
 
   ngOnInit(): void {
-    
-    this.registros$ = this.tipoCatalogoService.getAll();
+    this.registros$ = this.estatusService.getAll();
+    this.tipos$ = this.tipoEstatusService.getAll();
     this.load();
+    this.loadCatalogos();
 
     this.cols = [
-        { field: 'id', header: 'Id' },
-        { field: 'nombre', header: 'Nombre' },
-        { field: 'descripcion', header: 'Descripción' }
+      { field: 'id', header: 'Id' },
+      { field: 'clave', header: 'Clave' },
+      { field: 'nombre', header: 'Nombre' },
+      { field: 'descripcion', header: 'Descripción' },
+      { field: 'tipo', header: 'Tipo' }
     ];
-
   }
 
   load() {
@@ -48,12 +54,18 @@ export class TipoCatalogoComponent implements OnInit {
     });
   }
 
+  loadCatalogos() {
+    this.tipos$.subscribe({
+      next: data => this.tipos = data
+    });
+  }
+
   deleteSelectedRegistros() {
     this.deleteRegistrosDialog = true;
   }
 
   confirmDeleteSelected() {
-    this.tipoCatalogoService.deleteAllByIds(this.selectedRegistros).subscribe({
+    this.estatusService.deleteAllByIds(this.selectedRegistros).subscribe({
       next: () => {
         this.deleteRegistrosDialog = false;
         this.registros = this.registros.filter(val => !this.selectedRegistros.includes(val));
@@ -75,7 +87,7 @@ export class TipoCatalogoComponent implements OnInit {
   }
 
   confirmDelete() {
-    this.tipoCatalogoService.deleteById(this.registro.id).subscribe({
+    this.estatusService.deleteById(this.registro.id).subscribe({
       next: () => {
         this.deleteRegistroDialog = false;
         this.registros = this.registros.filter(val => val.id !== this.registro.id);
@@ -97,7 +109,7 @@ export class TipoCatalogoComponent implements OnInit {
 
     if (this.registro.nombre?.trim()) {
         if (this.registro.id) {
-          this.tipoCatalogoService.update(this.registro).subscribe({
+          this.estatusService.update(this.registro).subscribe({
             next: (data) => {
               // @ts-ignore
               this.registros[this.findIndexById(this.registro.id)] = this.registro;
@@ -111,7 +123,7 @@ export class TipoCatalogoComponent implements OnInit {
             }
           });
         } else {
-          this.tipoCatalogoService.create(this.registro).subscribe({
+          this.estatusService.create(this.registro).subscribe({
             next: data => {
               this.registro.id = data.id;
               this.registros.push(this.registro);
@@ -153,5 +165,5 @@ export class TipoCatalogoComponent implements OnInit {
   onGlobalFilter(table: Table, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
-  
+
 }
