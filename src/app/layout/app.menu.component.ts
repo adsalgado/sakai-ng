@@ -23,7 +23,8 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Catalogos',
                 items: [
-                    { label: 'Tipo Catálogo', icon: 'pi pi-fw pi-id-card', routerLink: ['/app/catalogs/tipo-catalogo'] },
+                    { label: 'Tipo Catálogo', icon: 'pi pi-fw pi-file-edit', routerLink: ['/app/catalogs/tipo-catalogo'] },
+                    { label: 'Catálogo', icon: 'pi pi-fw pi-file-edit', routerLink: ['/app/catalogs/catalogo'] }
                 ]
             },
             {
