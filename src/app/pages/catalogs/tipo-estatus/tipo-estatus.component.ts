@@ -1,37 +1,36 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { TipoCatalogoService } from './../../../services/tipo-catalogo.service';
 import { Component, OnInit } from '@angular/core';
-import { ITipoCatalogo } from '@app/models';
+import { ITipoEstatus } from '@app/models';
+import { TipoEstatusService } from '@app/services/tipo-estatus.service';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-tipo-catalogo',
-  templateUrl: './tipo-catalogo.component.html',
-  styleUrls: ['./tipo-catalogo.component.scss'],
+  selector: 'app-tipo-estatus',
+  templateUrl: './tipo-estatus.component.html',
+  styleUrls: ['./tipo-estatus.component.scss'],
   providers: [MessageService]
-  
 })
-export class TipoCatalogoComponent implements OnInit {
+export class TipoEstatusComponent implements OnInit {
 
-  registros$ !: Observable<ITipoCatalogo[]>;
+  registros$ !: Observable<ITipoEstatus[]>;
   registroDialog: boolean = false;
   deleteRegistroDialog: boolean = false;
   deleteRegistrosDialog: boolean = false;
-  registros: ITipoCatalogo[] = [];
-  selectedRegistros: ITipoCatalogo[] = [];
+  registros: ITipoEstatus[] = [];
+  selectedRegistros: ITipoEstatus[] = [];
   cols: any[] = [];
-  registro: ITipoCatalogo = {};
+  registro: ITipoEstatus = {};
   submitted: boolean = false;
 
-  constructor(public tipoCatalogoService: TipoCatalogoService, private messageService: MessageService) {
+  constructor(public tipoEstatusService: TipoEstatusService, private messageService: MessageService) {
 
   }
 
   ngOnInit(): void {
     
-    this.registros$ = this.tipoCatalogoService.getAll();
+    this.registros$ = this.tipoEstatusService.getAll();
     this.load();
 
     this.cols = [
@@ -53,7 +52,7 @@ export class TipoCatalogoComponent implements OnInit {
   }
 
   confirmDeleteSelected() {
-    this.tipoCatalogoService.deleteAllByIds(this.selectedRegistros).subscribe({
+    this.tipoEstatusService.deleteAllByIds(this.selectedRegistros).subscribe({
       next: () => {
         this.deleteRegistrosDialog = false;
         this.registros = this.registros.filter(val => !this.selectedRegistros.includes(val));
@@ -75,7 +74,7 @@ export class TipoCatalogoComponent implements OnInit {
   }
 
   confirmDelete() {
-    this.tipoCatalogoService.deleteById(this.registro.id).subscribe({
+    this.tipoEstatusService.deleteById(this.registro.id).subscribe({
       next: () => {
         this.deleteRegistroDialog = false;
         this.registros = this.registros.filter(val => val.id !== this.registro.id);
@@ -97,7 +96,7 @@ export class TipoCatalogoComponent implements OnInit {
 
     if (this.registro.nombre?.trim()) {
         if (this.registro.id) {
-          this.tipoCatalogoService.update(this.registro).subscribe({
+          this.tipoEstatusService.update(this.registro).subscribe({
             next: (data) => {
               // @ts-ignore
               this.registros[this.findIndexById(this.registro.id)] = this.registro;
@@ -111,7 +110,7 @@ export class TipoCatalogoComponent implements OnInit {
             }
           });
         } else {
-          this.tipoCatalogoService.create(this.registro).subscribe({
+          this.tipoEstatusService.create(this.registro).subscribe({
             next: data => {
               this.registro.id = data.id;
               this.registros.push(this.registro);
