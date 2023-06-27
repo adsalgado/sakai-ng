@@ -21,6 +21,11 @@ import { AuthGuard } from './_helpers/auth.guard';
                         canActivate: [AuthGuard]
                     },
                     { 
+                        path: 'security', 
+                        loadChildren: () => import('./pages/security/security.module').then(m => m.SecurityModule),
+                        canActivate: [AuthGuard]
+                    },
+                    { 
                         path: 'dashboard', 
                         loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule),
                         canActivate: [AuthGuard]

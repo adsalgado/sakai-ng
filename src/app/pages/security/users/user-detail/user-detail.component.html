@@ -1,0 +1,59 @@
+<p-panel>
+	<ng-template pTemplate="header">
+		User {{ user?.login }}
+	</ng-template>	
+
+	<div class="grid">
+		<div class="col-12">
+			<div class="p-fluid">
+				<div class="field grid">
+					<label class="font-bold col-12 mb-2 md:col-2 md:mb-0">Login:</label>
+					<div class="col-12 md:col-10">
+						{{ user?.login }}
+					</div>
+				</div>
+				<div class="field grid">
+					<label class="font-bold col-12 mb-2 md:col-2 md:mb-0">Email:</label>
+					<div class="col-12 md:col-10">
+						{{ user?.email }}
+					</div>
+				</div>
+				<div class="field grid">
+					<label class="font-bold col-12 mb-2 md:col-2 md:mb-0">Nombre:</label>
+					<div class="col-12 md:col-10">
+						{{ user?.firstName }} 
+					</div>
+				</div>
+				<div class="field grid">
+					<label class="font-bold col-12 mb-2 md:col-2 md:mb-0">Apellido paterno:</label>
+					<div class="col-12 md:col-10">
+						{{ user?.lastName }}
+					</div>
+				</div>
+				<div class="field grid">
+					<label class="font-bold col-12 mb-2 md:col-2 md:mb-0">Lenguaje:</label>
+					<div class="col-12 md:col-10">
+						{{ user?.langKey }}
+					</div>
+				</div>
+				<div class="field grid">
+					<label class="font-bold col-12 mb-2 md:col-2 md:mb-0">Profiles:</label>
+					<div class="col-12 md:col-10">
+						
+						<div *ngFor="let authority of user?.authorities">
+							<p-badge value="{{ authority }}" severity="info"></p-badge>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<ng-template pTemplate="footer">
+		<div class="my-2">
+			<button pButton pRipple routerLink="../../" label="Regresar" icon="pi pi-arrow-left" class="p-button-success mr-2" ></button>
+		</div>
+	</ng-template>
+
+</p-panel>

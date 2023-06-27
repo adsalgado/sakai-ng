@@ -1,0 +1,48 @@
+<form [formGroup]="editForm" (ngSubmit)="save()" >
+
+    <p-panel >
+        <ng-template pTemplate="header"> <span class="text-primary font-semibold text-xl">Datos</span></ng-template>
+
+        <div class="p-fluid p-formgrid grid">
+            <div class="field col-12 md:col-4">
+                <label htmlFor="id">Id</label>
+                <input pInputText type="text" name="id" formControlName="id" readonly />
+            </div>
+            <div class="field col-12 md:col-4">
+                <label htmlFor="login">Login</label>
+                <input pInputText type="text" name="login" formControlName="login" />
+            </div>
+            <div class="field col-12 md:col-4">
+                <label htmlFor="email">Email</label>
+                <input pInputText type="email" name="email" formControlName="email" />
+            </div>
+            <div class="field col-12 md:col-6">
+                <label htmlFor="firstName">Nombre</label>
+                <input pInputText name="firstName" type="text" formControlName="firstName" />
+            </div>
+            <div class="field col-12 md:col-6">
+                <label htmlFor="lastName">Apellido Paterno</label>
+                <input pInputText id="lastName" type="text" formControlName="lastName" />
+            </div>
+            <div class="field col-12 md:col-6">
+                <label htmlFor="langKey">Language</label>
+                <p-dropdown [options]="languages" formControlName="langKey"></p-dropdown>
+            </div>
+            <div class="field col-12 md:col-3">
+                <label htmlFor="authorities">Roles</label>
+                <p-multiSelect [options]="authorities" formControlName="authorities" ></p-multiSelect>
+            </div>
+        </div>
+        
+        <ng-template pTemplate="footer">
+            <div class="my-2">
+                <button pButton pRipple  [disabled]="editForm.invalid || isSaving"
+                        type="submit" label="Actualizar" class="p-button-success mr-2" icon="pi pi-save"></button>
+                <button pButton pRipple (click)="previousState()" 
+                        label="Regresar" class="p-button-danger" icon="pi pi-arrow-left"></button>
+            </div>
+        </ng-template>
+
+    </p-panel>
+
+</form>
